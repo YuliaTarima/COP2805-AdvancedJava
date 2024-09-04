@@ -1,0 +1,5 @@
+1. I ran the file to see the output:
+“The answer to ((5+2)x10)/2 is 0.Process finished with exit code 0”
+2. Since the process finished with exit code 0, I realized the error is of mathematical nature either within division, multiplication, or addition functions.
+3. I debugged the functions one by one until I arrived at the line of code that contained error: “%” instead of “/” division operator.
+
