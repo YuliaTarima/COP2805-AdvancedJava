@@ -11,13 +11,16 @@ module com.example.demo {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
+    requires javafx.graphics;
+    requires java.desktop;
+    requires javafx.media;
+    requires java.sql;
+    requires java.sql.rowset;
+
     opens com.example.demo to javafx.fxml;
     exports com.example.demo;
 
     opens com.book_code.chapter14 to javafx.graphics;
     opens com.assignments.week02 to javafx.graphics;
-
-    requires java.desktop;
-
-
+    exports com.assignments.week03 to javafx.graphics;
 }
