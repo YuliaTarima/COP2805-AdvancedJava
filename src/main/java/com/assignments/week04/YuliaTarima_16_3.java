@@ -15,7 +15,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
 
 /**
  * Main class for the Traffic Light Simulator application.
@@ -126,10 +125,10 @@ class TrafficLightBuilder {
 
         // Create and set shadow effect
         DropShadow shadow = new DropShadow();
-        shadow.setColor(Color.GRAY);
-        shadow.setOffsetX(5);
+        shadow.setColor(Color.LIGHTGREY);
+        shadow.setOffsetX(8);
         shadow.setOffsetY(5);
-        shadow.setRadius(10);
+        shadow.setRadius(15);
         borderRectangle.setEffect(shadow);
 
         return borderRectangle;
