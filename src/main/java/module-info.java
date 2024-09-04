@@ -23,4 +23,5 @@ module com.example.demo {
     opens com.book_code.chapter14 to javafx.graphics;
     opens com.assignments.week02 to javafx.graphics;
     exports com.assignments.week03 to javafx.graphics;
+    exports com.assignments.week04 to javafx.graphics;
 }
