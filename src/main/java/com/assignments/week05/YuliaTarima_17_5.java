@@ -1,12 +1,14 @@
-// -- * Store Objects and Arrays in a File *-- //
-//    Write a program that stores an array
-//    of the five int values 1, 2, 3, 4 and 5,
-//    a Date object for the current time,
-//    and the double value 5.5
-//    into a file named Exercise17_05.dat.
-//
-//    In the same program,
-//    write the code to read and display the data.
+//////////////////////////////////////////////////
+// -- * Store Objects and Arrays in a File * -- //
+//    Write a program that stores an array      //
+//    of the five int values 1, 2, 3, 4 and 5,  //
+//    a Date object for the current time,       //
+//    and the double value 5.5                  //
+//    into a file named Exercise17_05.dat.      //
+//                                              //
+//    In the same program, write the code       //
+//    to read and display the data.             //
+//////////////////////////////////////////////////
 
 package com.assignments.week05;
 
