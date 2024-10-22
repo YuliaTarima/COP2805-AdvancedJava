@@ -8,8 +8,8 @@
 
 // cd into src/main/java from the root folder
 // Run the program with the following console command:
-// java com/assignments/week08/YuliaTarima_20_01 com/assignments/week08/assignment20.txt
-package com.assignments.week08;
+// java com/assignments/week09/YuliaTarima_20_01 com/assignments/week09/assignment20.txt
+package com.assignments.week09;
 
 import java.io.*;
 import java.util.*;
@@ -36,7 +36,7 @@ public class YuliaTarima_20_01 {
             } else {
                 // This block should only run if args had no filename
                 System.out.println("The file does not exist." +
-                        "\nSuggested Usage: src/main/java/com/assignments/week08/assignment20.txt" +
+                        "\nSuggested Usage: src/main/java/com/assignments/week09/assignment20.txt" +
                         "\nPlease try again.");
                 fileName = scanner.nextLine(); // Read the filename from the user
             }
