@@ -18,18 +18,23 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.scene.effect.DropShadow;
 
 import static javafx.application.Application.launch;
 
 public class YuliaTarima_32_05 extends Application {
-    private Thread fanThread; // Thread to control the fan animation
-    private boolean running = true; // Used to control the thread state
+    // Thread to control the fan animation
+    private Thread fanThread;
+    // Used to control the thread state
+    private boolean running = true;
 
     public static void main(String[] args) {
-        launch(args); // Launch the JavaFX application
+        // Launch the JavaFX application
+        launch(args);
     }
 
-    @Override // Override the start method in the Application class
+    // Override the start method in the Application class
+    @Override
     public void start(Stage primaryStage) {
         // Create a FanPane object
         ControlAnimationFanPane fan = new ControlAnimationFanPane();
@@ -48,27 +53,37 @@ public class YuliaTarima_32_05 extends Application {
         pane.setBottom(hBox);
 
         // Create a scene and place it in the stage
-        Scene scene = new Scene(pane, 400, 450); // Doubling the scene size
-        primaryStage.setTitle("Fan Animation Using Thread"); // Set the stage title
-        primaryStage.setScene(scene); // Place the scene in the stage
-        primaryStage.show(); // Display the stage
+        // Scene size
+        Scene scene = new Scene(pane, 400, 450);
+        // Stage title
+        primaryStage.setTitle("Fan Animation Using Thread");
+        // Place the scene in the stage
+        primaryStage.setScene(scene);
+        // Display the stage
+        primaryStage.show();
 
         // Create and start a thread to handle the animation
         fanThread = new Thread(() -> {
             try {
                 while (running) {
-                    Thread.sleep(100); // Control the fan speed
-                    fan.move(); // Move the fan
+                    // Control the fan speed
+                    Thread.sleep(80);
+                    // Move the fan
+                    fan.move();
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         });
-        fanThread.setDaemon(true); // Ensure the thread terminates when the app exits
-        fanThread.start(); // Start the fan thread
+        // Ensure the thread terminates when the app exits
+        fanThread.setDaemon(true);
+        // Start the fan thread
+        fanThread.start();
 
         // Button controls
-        btPause.setOnAction(e -> running = false); // Pause the fan
+        // Pause the fan
+        btPause.setOnAction(e -> running = false);
+        // Resume the fan
         btResume.setOnAction(e -> {
             if (!running) {
                 running = true;
@@ -85,9 +100,9 @@ public class YuliaTarima_32_05 extends Application {
                 fanThread.setDaemon(true);
                 fanThread.start();
             }
-        }); // Resume the fan
-
-        btReverse.setOnAction(e -> fan.reverse()); // Reverse the fan direction
+        });
+        // Reverse the fan direction
+        btReverse.setOnAction(e -> fan.reverse());
 
         // Adjust fan size when the window is resized
         scene.widthProperty().addListener(e -> fan.setW(fan.getWidth()));
@@ -96,23 +111,48 @@ public class YuliaTarima_32_05 extends Application {
 }
 
 class ControlAnimationFanPane extends Pane {
-    private double w = 400; // Double the initial width
-    private double h = 400; // Double the initial height
+    // Initial width of the pane
+    private double w = 400;
+    // Initial height of the pane
+    private double h = 400;
+    // Set fan radius, ensure the fan fits within the pane.
     private double radius = Math.min(w, h) * 0.45;
     private Circle circle = new Circle(w / 2, h / 2, radius);
+    // Creates an array that can hold four fan blades
     private Arc arc[] = new Arc[4];
+    // Initial angle at which the first fan blade is positioned
+    // 360/4 blades = 90, so rest of the blades will be positioned
+    // at 120, 210, and 300 degrees for a four-blade fan
     private double startAngle = 30;
-    private double increment = 5; // Fan rotation increment
+    // Fan rotation speed increment
+    // how much the startAngle changes (increases by n degrees)
+    // with each update of the fan's position
+    private double increment = 3;
 
     public ControlAnimationFanPane() {
-        circle.setStroke(Color.BLACK);
+        circle.setStroke(Color.LIGHTGRAY);
         circle.setFill(Color.WHITE);
         getChildren().add(circle);
 
+        // Create a shadow effect
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.LIGHTGREY);
+        shadow.setRadius(5);
+        // Set horizontal offset
+        shadow.setOffsetX(3);
+        // Set vertical offset
+        shadow.setOffsetY(3);
+
         for (int i = 0; i < 4; i++) {
+            // reduce fan radius (radius * n) to create the fan blades
+            // arc starting angle (i * 90) degrees spreads blades evenly in four directions
+            // each arc spans 35 degrees.
             arc[i] = new Arc(w / 2, h / 2, radius * 0.9, radius * 0.9, startAngle + i * 90, 35);
-            arc[i].setFill(Color.RED); // Set fill color
+            // Set fill color
+            arc[i].setFill(Color.TURQUOISE);
             arc[i].setType(ArcType.ROUND);
+            // Apply the shadow effect
+            arc[i].setEffect(shadow);
             getChildren().addAll(arc[i]);
         }
     }
@@ -141,8 +181,9 @@ class ControlAnimationFanPane extends Pane {
         circle.setCenterY(h / 2);
 
         for (int i = 0; i < 4; i++) {
-            arc[i].setRadiusX(radius * 0.9);
-            arc[i].setRadiusY(radius * 0.9);
+            // Set radius of the Fan Blades
+            arc[i].setRadiusX(radius * 0.95);
+            arc[i].setRadiusY(radius * 0.95);
             arc[i].setCenterX(w / 2);
             arc[i].setCenterY(h / 2);
             arc[i].setStartAngle(startAngle + i * 90);
