@@ -16,6 +16,8 @@ module com.example.demo {
     requires javafx.media;
     requires java.sql;
     requires java.sql.rowset;
+    requires java.base;
+
 
     opens com.example.demo to javafx.fxml;
     exports com.example.demo;
@@ -26,4 +28,7 @@ module com.example.demo {
     exports com.assignments.week04 to javafx.graphics;
     opens com.assignments.week13 to javafx.graphics;
     exports com.assignments.week13 to javafx.graphics;
+    opens com.assignments.week14 to javafx.graphics;
+    exports com.assignments.week14 to javafx.graphics;
+
 }
