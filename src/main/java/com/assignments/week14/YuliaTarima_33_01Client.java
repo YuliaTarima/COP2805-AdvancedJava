@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -52,6 +53,11 @@ public class YuliaTarima_33_01Client extends Application {
     gridPane.add(loanAmountLabel, 0, 2);
     gridPane.add(loanAmountField, 1, 2);
 
+    // Create a Submit button
+    Button submitButton = new Button("Submit");
+    // Add the button to the GridPane (row 3, column 1)
+    gridPane.add(submitButton, 1, 3);
+
     // Create a TextArea to display messages and results
     TextArea ta = new TextArea();
     // Make the TextArea non-editable
@@ -75,12 +81,8 @@ public class YuliaTarima_33_01Client extends Application {
     // Display the primary stage
     primaryStage.show();
 
-    // Add an action event to the interest rate field when Enter is pressed
-    interestRateField.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
-    // Add an action event to the years field when Enter is pressed
-    yearsField.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
-    // Add an action event to the loan amount field when Enter is pressed
-    loanAmountField.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
+    // Add an action event to the Submit button
+    submitButton.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
 
     try {
       // Create a socket to connect to the server at localhost on port 8000
