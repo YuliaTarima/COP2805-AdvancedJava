@@ -6,7 +6,6 @@ import java.util.Date;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -17,116 +16,152 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class YuliaTarima_33_01Client extends Application {
-  // IO streams
+  // Define the output stream for sending data to the server
   DataOutputStream toServer = null;
+
+  // Define the input stream for receiving data from the server
   DataInputStream fromServer = null;
 
   @Override
   public void start(Stage primaryStage) {
-    // Panel for loan parameters
+    // Create a GridPane for entering loan parameters
     GridPane gridPane = new GridPane();
+    // Set padding and spacing for the GridPane
     gridPane.setPadding(new Insets(10, 10, 10, 10));
     gridPane.setVgap(5);
     gridPane.setHgap(5);
 
-    // Labels and text fields for loan parameters
+    // Create a label and text field for the annual interest rate
     Label interestRateLabel = new Label("Annual Interest Rate: ");
     TextField interestRateField = new TextField();
+    // Add the label and text field to the GridPane
     gridPane.add(interestRateLabel, 0, 0);
     gridPane.add(interestRateField, 1, 0);
 
+    // Create a label and text field for the number of years
     Label yearsLabel = new Label("Number of Years: ");
     TextField yearsField = new TextField();
+    // Add the label and text field to the GridPane
     gridPane.add(yearsLabel, 0, 1);
     gridPane.add(yearsField, 1, 1);
 
+    // Create a label and text field for the loan amount
     Label loanAmountLabel = new Label("Loan Amount: ");
     TextField loanAmountField = new TextField();
+    // Add the label and text field to the GridPane
     gridPane.add(loanAmountLabel, 0, 2);
     gridPane.add(loanAmountField, 1, 2);
 
-    // Text area to display contents
+    // Create a TextArea to display messages and results
     TextArea ta = new TextArea();
+    // Make the TextArea non-editable
     ta.setEditable(false);
+    // Add the TextArea to a ScrollPane for scrolling capability
     ScrollPane scrollPane = new ScrollPane(ta);
 
-    // Main pane
+    // Create a BorderPane to organize the layout
     BorderPane mainPane = new BorderPane();
+    // Place the GridPane at the top of the BorderPane
     mainPane.setTop(gridPane);
+    // Place the ScrollPane (containing the TextArea) at the center of the BorderPane
     mainPane.setCenter(scrollPane);
 
-    // Create a scene and place it in the stage
+    // Create a Scene with the BorderPane and set its size
     Scene scene = new Scene(mainPane, 450, 350);
+    // Set the title of the stage (client window)
     primaryStage.setTitle("Loan Client");
+    // Set the Scene for the primary stage
     primaryStage.setScene(scene);
+    // Display the primary stage
     primaryStage.show();
 
-    // Handle action when Enter is pressed in any text field
+    // Add an action event to the interest rate field when Enter is pressed
     interestRateField.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
+    // Add an action event to the years field when Enter is pressed
     yearsField.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
+    // Add an action event to the loan amount field when Enter is pressed
     loanAmountField.setOnAction(e -> sendLoanParameters(interestRateField, yearsField, loanAmountField, ta));
 
     try {
-      // Create a socket to connect to the server
+      // Create a socket to connect to the server at localhost on port 8000
       Socket socket = new Socket("localhost", 8000);
 
-      // Show the connection message on the TextArea once connected
+      // Display a message in the TextArea indicating the client is connected to the server
       Platform.runLater(() -> {
         ta.appendText("Connected to the server at " + new Date() + '\n');
       });
 
-      // Create an input stream to receive data from the server
+      // Initialize the input stream to receive data from the server
       fromServer = new DataInputStream(socket.getInputStream());
 
-      // Create an output stream to send data to the server
+      // Initialize the output stream to send data to the server
       toServer = new DataOutputStream(socket.getOutputStream());
     } catch (IOException ex) {
+      // Display an error message in the TextArea if a connection error occurs
       ta.appendText(ex.toString() + '\n');
     }
   }
 
+  // Method to send loan parameters to the server and receive results
   private void sendLoanParameters(TextField interestRateField, TextField yearsField, TextField loanAmountField, TextArea ta) {
     try {
-      // Check if the input fields are not empty
+      // Check if all input fields are filled; if not, throw an exception
       if (interestRateField.getText().isEmpty() || yearsField.getText().isEmpty() || loanAmountField.getText().isEmpty()) {
         throw new IllegalArgumentException("All fields must be filled in.");
       }
-      // Parse the loan parameters from the text fields
+
+      // Parse the annual interest rate from the text field
       double annualInterestRate = Double.parseDouble(interestRateField.getText().trim());
+
+      // Parse the number of years from the text field
       int numberOfYears = Integer.parseInt(yearsField.getText().trim());
+
+      // Parse the loan amount from the text field
       double loanAmount = Double.parseDouble(loanAmountField.getText().trim());
 
-      // Validate the loan parameters
+      // Validate the annual interest rate; it must be between 0 and 100
       if (annualInterestRate <= 0 || annualInterestRate > 100) {
         Platform.runLater(() -> ta.appendText("Error: Interest rate must be between 0 and 100.\n"));
         return;
       }
+
+      // Validate the number of years; it must be positive and reasonable (e.g., up to 100)
       if (numberOfYears <= 0 || numberOfYears > 100) {
-        Platform.runLater(() -> ta.appendText("Error: Number of numberOfYears must be a positive value and reasonable (e.g., up to 100).\n"));
+        Platform.runLater(() -> ta.appendText("Error: Number of years must be a positive value and reasonable (e.g., up to 100).\n"));
         return;
       }
+
+      // Validate the loan amount; it must be greater than 0
       if (loanAmount <= 0) {
         Platform.runLater(() -> ta.appendText("Error: Loan amount must be greater than 0.\n"));
         return;
       }
 
-      // Send the loan parameters to the server
+      // Send the annual interest rate to the server
       toServer.writeDouble(annualInterestRate);
+
+      // Send the number of years to the server
       toServer.writeInt(numberOfYears);
+
+      // Send the loan amount to the server
       toServer.writeDouble(loanAmount);
+
+      // Flush the output stream to ensure the data is sent
       toServer.flush();
 
-      // Receive the monthly payment and total payment from the server
+      // Receive the monthly payment from the server
       double monthlyPayment = fromServer.readDouble();
+
+      // Receive the total payment from the server
       double totalPayment = fromServer.readDouble();
 
-      // Format the values to 2 decimal places
+      // Format the monthly and total payments to 2 decimal places
       String formattedMonthlyPayment = String.format("%.2f", monthlyPayment);
       String formattedTotalPayment = String.format("%.2f", totalPayment);
 
-      // Display the results to the text area
+      // Display the loan parameters and results in the TextArea
       Platform.runLater(() -> {
-        ta.appendText("Loan Parameters Sent to the Server:\n");
+        ta.appendText("\nLoan Parameters Sent to the Server:\n");
         ta.appendText("Interest Rate: " + annualInterestRate + "\n");
         ta.appendText("Years: " + numberOfYears + "\n");
         ta.appendText("Loan Amount: " + loanAmount + "\n");
@@ -135,12 +170,15 @@ public class YuliaTarima_33_01Client extends Application {
         ta.appendText("Total Payment: " + formattedTotalPayment + "\n");
       });
     } catch (NumberFormatException ex) {
+      // Display an error message if the input cannot be parsed as a number
       Platform.runLater(() -> ta.appendText("Error: Please enter valid numbers for all parameters.\n"));
     } catch (IOException ex) {
+      // Display an error message if a communication error occurs
       Platform.runLater(() -> ta.appendText("Error: " + ex.getMessage() + "\n"));
     }
   }
 
+  // Main method to launch the JavaFX application
   public static void main(String[] args) {
     launch(args);
   }
