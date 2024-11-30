@@ -30,5 +30,6 @@ module com.example.demo {
     exports com.assignments.week13 to javafx.graphics;
     opens com.assignments.week14 to javafx.graphics;
     exports com.assignments.week14 to javafx.graphics;
-
+    opens com.assignments.week15 to javafx.graphics;
+    exports com.assignments.week15 to javafx.graphics;
 }
