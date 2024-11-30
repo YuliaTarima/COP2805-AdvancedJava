@@ -123,6 +123,8 @@ public class YuliaTarima_34_4 extends Application {
             StringBuilder studentGrades = new StringBuilder();
             // Tracks if common student exists in the database on joined tables
             boolean studentFound = false;
+            // Counter for graded courses for the requested student
+            int courseCounter = 0;
             // Store the student's full name if found
             String studentFullName = "";
 
@@ -134,13 +136,7 @@ public class YuliaTarima_34_4 extends Application {
                 studentFullName = (studentFirstName + " " + studentMi + " " + studentLastName).trim();
 
                 // Mark the student as found
-                if (!studentFullName.isEmpty()) {
-                    studentFound = true;
-                } else {
-                    // Return to prevent further processing
-                    return;
-                }
-
+                if (studentFullName.isEmpty()) return; else studentFound = true;
                 // Get course title and grade
                 String title = rset.getString("title");
                 String grade = rset.getString("grade");
@@ -151,12 +147,23 @@ public class YuliaTarima_34_4 extends Application {
                             .append("'s grade on course ")
                             .append(title).append(" is ")
                             .append(grade).append(".\n");
+                    // Increment counter for each graded course
+                    courseCounter++;
                 }
             }
 
             // Display the results or indicate no data found
             if (studentGrades.length() > 0) {
                 // Student exists and has graded courses
+                // Append number of graded courses for the requested student
+                if (courseCounter > 0) {
+                    studentGrades.append("\n\n")
+                            .append(studentFullName)
+                            .append(" is enrolled in ")
+                            .append(courseCounter)
+                            .append(" graded courses.");
+                }
+                // Display student graded courses summary
                 lblStatus.setText(studentGrades.toString());
             } else if (!studentFound) {
                 // No student found with the given SSN
